@@ -56,10 +56,10 @@ export default ({ addScore }) => {
   const [buttonStatus, setButtonStatus] = useState({})
   const intervalRef = useRef()
 
-  const clearHighlightButton = letter => {
+  const clearHighlightButton = (letter, valid = false) => {
     const currentTimer = buttonStatus[letter]
-    if (currentTimer) {
-      addScore(1)
+    if (valid) {
+      addScore(currentTimer ? 1 : -1)
     }
 
     clearTimeout(currentTimer)
@@ -77,15 +77,21 @@ export default ({ addScore }) => {
       )
 
     const id = setInterval(() => {
-      const randomLetter = getRandomLetter()
+      const randomLetters = getRandomLetter(Math.floor(Math.random() * 3))
+      const addKeys = randomLetters.reduce((R, V) => {
+        if (!buttonStatus[V]) {
+          R[V] = setClearHighlightTimer(V)
+        }
+        return R
+      }, {})
       setButtonStatus(buttonStatus => ({
         ...buttonStatus,
-        [randomLetter]: setClearHighlightTimer(randomLetter)
+        ...addKeys
       }))
-    }, 500)
+    }, Math.floor(Math.random() * 700))
     intervalRef.current = id
 
-    const handleKeyDown = e => clearHighlightButton(e.key)
+    const handleKeyDown = e => clearHighlightButton(e.key, true)
     document.addEventListener('keydown', handleKeyDown)
     return () => {
       clearInterval(intervalRef.current)

@@ -27,5 +27,7 @@ const alphabet = [
   'z'
 ]
 
-export const getRandomLetter = () =>
-  alphabet[Math.floor(Math.random() * alphabet.length)]
+export const getRandomLetter = (n = 1) =>
+  Array(n)
+    .fill(n)
+    .map(() => alphabet[Math.floor(Math.random() * alphabet.length)])
