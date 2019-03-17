@@ -32,13 +32,14 @@ const ThirdRow = styled(Row)`
 `
 
 const Button = styled.div`
+  height: 48px;
+  width: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: ${props => (props.highlight ? '#eee' : '#aaa')};
   border-radius: 5px;
-  height: 48px;
-  width: 48px;
+  font-size: 24px;
 
   & + & {
     margin-left: 8px;
@@ -51,12 +52,17 @@ const KEYBORAD_MAP = [
   ['z', 'x', 'c', 'v', 'b', 'n', 'm']
 ]
 
-export default () => {
+export default ({ addScore }) => {
   const [buttonStatus, setButtonStatus] = useState({})
   const intervalRef = useRef()
 
   const clearHighlightButton = letter => {
-    clearTimeout(buttonStatus[letter])
+    const currentTimer = buttonStatus[letter]
+    if (currentTimer) {
+      addScore(1)
+    }
+
+    clearTimeout(currentTimer)
     setButtonStatus(buttonStatus => ({
       ...buttonStatus,
       [letter]: null
@@ -76,10 +82,14 @@ export default () => {
         ...buttonStatus,
         [randomLetter]: setClearHighlightTimer(randomLetter)
       }))
-    }, 1000)
+    }, 500)
     intervalRef.current = id
+
+    const handleKeyDown = e => clearHighlightButton(e.key)
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
       clearInterval(intervalRef.current)
+      document.removeEventListener('keydown', handleKeyDown)
     }
   })
 

@@ -7,6 +7,6 @@ const Wrapper = styled.div`
   font-size: 30px;
 `
 
-export default () => {
-  return <Wrapper>Score: </Wrapper>
+export default ({ score, addScore }) => {
+  return <Wrapper>Score: {score}</Wrapper>
 }

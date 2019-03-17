@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import ScoreBoard from './ScoreBoard'
@@ -11,16 +11,24 @@ const Title = styled.div`
   font-size: 40px;
 `
 
-class App extends Component {
-  render () {
-    return (
-      <div>
-        <Title>Keyboard Hitter</Title>
-        <ScoreBoard />
-        <Keyboard />
-      </div>
-    )
-  }
-}
+const ControlPanel = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
-export default App
+export default () => {
+  const [score, setScore] = useState(0)
+  const addScore = () => setScore(score + 1)
+  return (
+    <div>
+      <Title>Keyboard Hitter</Title>
+      <ControlPanel>
+        <button type='button' onClick={() => setScore(0)}>
+          Restart
+        </button>
+      </ControlPanel>
+      <ScoreBoard score={score} addScore={addScore} />
+      <Keyboard addScore={addScore} />
+    </div>
+  )
+}
